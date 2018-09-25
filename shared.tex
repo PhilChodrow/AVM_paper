@@ -1,0 +1,66 @@
+% This is information that is shared between the main document and any
+% supplement. If no supplement is required, then this information can
+% be included directly in the main document.
+
+
+% Packages and macros go here
+\usepackage{lipsum}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\usepackage{algorithmic}
+\usepackage{tikz}
+\usepackage{subcaption} 
+\usepackage{pc_math}
+\usepackage{amssymb}
+\usepackage{bbm}
+% \usepackage[color=gray!60]{todonotes}
+\usepackage[disable, color=gray!60]{todonotes}
+% \usepackage{caption}
+% \usepackage{hyperref}
+\graphicspath{{fig/}}
+
+\tikzstyle{major}=[circle, fill=blue!50, minimum size=10pt, line width=0mm, inner sep=0pt, draw=black]
+\tikzstyle{minor} = [major, fill=orange!80, draw=black]
+\tikzstyle{focus} = [minor, line width=.2mm, inner sep=1pt, draw=black]
+\tikzstyle{edge} = [draw,line width=.3mm, -, gray!120]
+\tikzstyle{gone} = [edge,  densely dotted]
+\tikzstyle{arrow} = [draw,line width=.2mm, ->, gray!120]
+
+
+\tikzstyle{weight} = [font=\small]
+
+\ifpdf
+  \DeclareGraphicsExtensions{.eps,.pdf,.png,.jpg}
+\else
+  \DeclareGraphicsExtensions{.eps}
+\fi
+
+% Add a serial/Oxford comma by default.
+\newcommand{\creflastconjunction}{, and~}
+
+% Used for creating new theorem and remark environments
+\newsiamremark{remark}{Remark}
+\newsiamremark{hypothesis}{Hypothesis}
+\crefname{hypothesis}{Hypothesis}{Hypotheses}
+\newsiamthm{claim}{Claim}
+
+% Sets running headers as well as PDF title and authors
+\headers{Adaptive Voter Models}{P. Chodrow, P. J. Mucha}
+
+% Title. If the supplement option is on, then "Supplementary Material"
+% is automatically inserted before the title.
+\title{Symmetry-Breaking in Adaptive Voter Models\thanks{Submitted to the editors \today.
+\funding{This work was funded by the NSF (1122374).}}}
+
+% Authors: full names plus addresses.
+\author{Philip S. Chodrow\thanks{Operations Research Center, Massachusetts Institute of Technology, Cambridge, MA, 02139 and Laboratory for Information and Decision Systems, Massachusetts Institute of Technology, Cambridge, MA, 02139
+  (\email{pchodrow@mit.edu}, \url{http://www.philchodrow.github.io}).}
+\and Peter J. Mucha\thanks{Carolina Center for Interdisciplinary Applied Mathematics, Department of Mathematics, University of North Carolina, Chapel Hill, NC 27599-3250, and Department of Applied Physical Sciences, University of North Carolina, Chapel Hill, NC 27599-3050. 
+  (\url{http://mucha.web.unc.edu/}).}}
+
+\usepackage{amsopn}
+%%% Local Variables: 
+%%% mode:latex
+%%% TeX-master: "ex_article"
+%%% End: 
