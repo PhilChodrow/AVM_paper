@@ -98,30 +98,35 @@
 	We close in \Cref{sec:discussion} with a discussion of promising extensions, both to our approximation methodology and to the model itself. 
 	
 \section{Adaptive Voter Models} \label{sec:AVMs}
-
-	The minimal AVM is a first-order Markov process on a state-space of undirected graphs with labeled node states.\footnote{Adaptive network dynamics have also been studied in the context of epidemic spreading \cite{Marceau2010,Lee2017} and game theory \cite{Malik2016}; however, we will not consider these models here.} \pjm{We should find some other references to add to this footnote, and perhaps also move this footnote into a sentence in the Introduction} 
-	A state of the AVM has the form $G = (\mathcal{N}, \mathcal{L}, \mathcal{E})$, where $\mathcal{N}$ is the set of nodes and $\mathcal{E}$ is the set of edges; $(u,v) \in \mathcal{E}$ means that an edge linking nodes $u$and $v$ is present in $\mathcal{G}$.
-    The vector $\mathcal{L}$  of node-labels may be viewed as a function $\mathcal{N} \rightarrow \mathcal{X}$ where $\mathcal{X}$ is the label alphabet.  
-	While $\mathcal{N}$ is fixed, both $\mathcal{L}$ and $\mathcal{E}$ are allowed to vary stochastically with time. 
-	Binary-state opinion dynamics, $\mathcal{X} = \{0,1\}$, are the most frequently considered, while interesting features also arise in multi-opinion dynamics \cite{Holme2006, Shi2013}. 
-	In the present paper, we will restrict attention to the binary-state case.
 	
-	The (discrete-time) stochastic dynamics $(\mathcal{E}(t), \mathcal{L}(t)) \mapsto (\mathcal{E}(t+1), \mathcal{L}(t+1))$ are specified by the following mechanistic update rules, which are parameterized by a rewiring rate $\alpha\in [0,1]$. 
-	The step starts by sampling an edge $(u,v) \in \mathcal{E}(t)$ uniformly at random with random orientation, \emph{conditional} on the edge being \emph{active}: $\mathcal{L}_u(t) \neq \mathcal{L}_v(t)$. 
-	Then
-		\begin{enumerate}
-			\item With probability $\alpha$, \textbf{rewire}: delete the (undirected) edge $(u,v)$ and add edge $(u,w)$ selected according to one of the following two rules depending on the model variant being used. 
-			In the \emph{rewire-to-random} model variant, $w$ is chosen uniformly from $\mathcal{N}\setminus \{u\}$. 
-			In the \emph{rewire-to-same} variant, $w$ is chosen uniformly from the set $S_u = \{w' \in \mathcal{N}\setminus \{w\} | \mathcal{L}_{w'}(t) = \mathcal{L}_u(t)\}$. 
-			\item Otherwise, with probability $1-\alpha$, \textbf{vote}:  $\mathcal{L}_u(t+1) \gets \mathcal{L}_v(t)$. 
-		\end{enumerate}
-	\pc{Removed discussion of multigraphs -- I noticed that our adaptation of Bill's code still prevents multi-edge formation, so we should restrict to simple graphs.}
-
-\pjm{Fold the following citing sentences in earlier:} The multi-state rewire-to-same AVM was introduced and studied numerically by \cite{Holme2006}.
+	An adaptive voter model is a first-order, discrete-time Markov process on a space of states of the form $G = (\mathcal{N}, \mathcal{L}, \mathcal{E})$, where $\mathcal{N}$ is the set of nodes and $\mathcal{E}$ is the set of edges; $(u,v) \in \mathcal{E}$ means that an edge linking nodes $u$and $v$ is present in $\mathcal{G}$.
+	\footnote{Adaptive network dynamics have also been studied in the context of epidemic spreading \cite{Marceau2010,Lee2017} and game theory \cite{Malik2016}; however, we will not consider these models here.} \pjm{We should find some other references to add to this footnote, and perhaps also move this footnote into a sentence in the Introduction} 
+    The vector $\mathcal{L}$  node labels maps $\mathcal{N} \rightarrow \mathcal{X}$ where $\mathcal{X}$ is an alphabet of possible label values. 
+	The node set $\mathcal{N}$ is fixed, while both $\mathcal{L}$ and $\mathcal{E}$ evolve stochastically.
+	The case $\mathcal{X} = \{0,1\}$, corresponding to binary-state dynamics, is most frequently considered. 
+	Additional interesting features arise in multi-opinion dynamics \cite{Holme2006, Shi2013}; however, we will restrict to the binary-state case in this paper. 
+	
+	Most previous attention has focused on AVMs with two rewiring and voting dynamics. 
+	The multi-state rewire-to-same AVM was introduced and studied numerically by \cite{Holme2006}.
 	The first analytical approximation techniques for the binary-state rewire-to-same AVM appeared in \cite{Kimura2008}. 
 	The rewire-to-random variant was introduced and analyzed using multiple techniques by \cite{Durrett2012}.  
+	Our model adds random opinion switching to the classical binary opinion AVM.	
+	The (discrete-time) stochastic dynamics $(\mathcal{E}(t), \mathcal{L}(t)) \mapsto (\mathcal{E}(t+1), \mathcal{L}(t+1))$ are specified by the following mechanistic update rules, which are parameterized by random-switching rate $\lambda \in [0,1]$ and rewiring rate $\alpha\in [0,1]$. 
+		\begin{enumerate}
+			\item With probability $\lambda$, \textbf{mutate}: uniformly sample a node $u\in \mathcal{N}$ and send sample $\mathcal{L}_u(t+1)  \sim \mathrm{uniform}(\mathcal{X}\setminus \{\mathcal{L}_u(t)\})$.  
+			\item Otherwise (With probability $1-\lambda$),  sample an edge $(u,v) \in \mathcal{E}(t)$ uniformly from the set $\{(u,v):\mathcal{L}_u(t) \neq \mathcal{L}_v(t)\}$ of \emph{active} edges. Then, 
+			\begin{enumerate}
+				\item With probability $\alpha$, \textbf{rewire}: delete the (undirected) edge $(u,v)$ and add edge $(u,w)$ selected according to one of the following two rules depending on the model variant being used. 
+				In the \emph{rewire-to-random} model variant, $w$ is chosen uniformly from $\mathcal{N}\setminus \{u\}$. 
+				In the \emph{rewire-to-same} variant, $w$ is chosen uniformly from the set $S_u = \{w' \in \mathcal{N}\setminus \{w\} | \mathcal{L}_{w'}(t) = \mathcal{L}_u(t)\}$. 
+				\item Otherwise (with probability $1-\alpha$) \textbf{vote}:  $\mathcal{L}_u(t+1) \gets \mathcal{L}_v(t)$. 
+			\end{enumerate}
+			
 
-	The classical binary-state AVM displays rich properties, which are typically studied through the following summary statistics. 
+		\end{enumerate}
+	\pc{Removed discussion of multigraphs -- I noticed that our adaptation of Bill's code still prevents multi-edge formation, so we should restrict to simple graphs.}
+	
+	The properties of the AVM are typically studied via the following set of summary statistics. 
 	Let $n = \abs{\mathcal{N}}$ be the number of nodes, $m = \abs{\mathcal{E}(t)}$ the number of edges, and $c = {2m}/{n}$ the mean degree.
 	Since the dynamics conserve $n$ and $m$, $c$ is time-independent and may be regarded as an additional system parameter. 
 	Let $N_i(t) = \abs{\{u \in \mathcal{N} \;|\;\mathcal{L}_u(t) = i \}}$ be the number of nodes holding opinion $i$ at time $t$. 
