@@ -173,8 +173,6 @@
 			\includegraphics[width=.7\textwidth]{network_sample}
 			\caption{Sample from the equilibrium distribution of a rewire-to-random AVM with $n = 400$ agents, mean degree $c = 10$, rewiring rate $\alpha = 0.9$, and mutation rate $\lambda = 0.01$. The active edge density is $\rho = 0.12$.} \label{fig:sample}
 		\end{figure}
-
-		
 		The central analytical task is therefore to estimate the behavior of $\rho$ as a function of the parameters $\lambda$, $\alpha$, and $c$, as well as the opinion density $\q$.
 		\footnote{Recent papers have noted other additional phenomena of interest, such as approximate conservation laws \cite{Toruniewska2017} and structural behavior near the phase transition $\alpha^*$ \cite{Horstmeyer2018}; however, we will not pursue these themes further here.}
 		Many previous studies have focused on subsets of this task.
@@ -200,30 +198,30 @@
 		Furthermore, they are relatively computationally intensive (compared to, say, mean-field or pair-approximation approaches); in particular, the AME results in \cite{Durrett2012} requires the numerical solution of $\Theta(k_\mathrm{max}^2)$, where $k_\mathrm{max}$ is the largest node-degree expected to emerge in the course of a simulation, and therefore depends on the mean degree $c$. 
 		This scheme quickly becomes impractical even for modest $c$. 
 
-	
-	
-	\section{Analysis}
-	% START HERE
-	
-	Consider the genesis via opinion-switching of a single dissenting node $u$. 
-	Because $\mathcal{G}$ is otherwise uniform on its connected components, the fast-timescale dynamics concentrate in the neighborhood of $u$. 
-	We can distinguish two qualitative regimes: 
-	\begin{enumerate}
-		\item \textbf{Subcriticality:} With high probability, the dissenting opinion on $u$ is eventually either snuffed out by voting or quarantined by rewiring. 
-		\item \textbf{Criticality:} With nonzero probability, the dissenting opinion $u$ triggers a cascade of active edge-generation, which eventually generates a nonzero proportion of active edges. 
-	\end{enumerate}
-	These local regimes are separated by critical values in parameter space of $\alpha$, $\lambda$, and the mean-degree $c$. 
-	They are also connected to the global phase transitions previously discussed. 
-	In the subcritical regime, the system stays within a neighborhood of the fully-fragmented state subspace, and $\rho \approx 0$ in the large $n$ limit. 
-	In the critical regime, on the other hand, the system generates a nonzero proportion of discordant edges, eventually reaching the arch (\Cref{fig:arch_illustration} and then diffusing along it. 
-	
-	\subsection{Symmetry Breaking in Voting Behavior}
-		To develop useful approximations, we leverage observations about the asymmetry between the local majority and local minority opinions. To our knowledge, the use of these observations for such modeling purposes has not previously appeared in the literature.
-		Consider again the fragmented state $\rho = 0$, in which opinion labels are constant within each component (\Cref{fig:majorities}, left).  
-		This is the extreme case in which we can distinguish a \emph{local majority}: in the neighborhood of any node, all other nodes share the same opinion. 
-		Suppose that node $u$ mutates its opinion from $0$ to $1$. 
-		On $C$, the component of which $u$ is a member, opinions are no longer constant.	
-		Immediately after the mutation, and even after an $o\left(\abs{C}\right)$ number of follow-up voting events within the component (\Cref{fig:majorities}, right), opinion $1$ is still distinguishable as a local minority. That is, local neighborhoods within $C$ are still statistically dominated by opinion $0$ nodes. 
+	\section{Analytical Methods}
+	    We now develop an analytical approximation framework for estimation of the arch. 
+	    The strategy is to conduct a perturbative analysis about the fully fragmented state $\rho = 0$. 
+	    When $\lambda = 0$, the fragmented state is trivially stable and no useful analysis is possible. 
+	    In contrast, when $\lambda > 0$, the system is subject to small fluctuations induced by the random-opinion switching, which may potentially drive the system to a qualitatively new region of phase space. 
+	    We now explore this perturbative approach in detail. 
+	    
+	    Consider the genesis via opinion-switching of a single dissenting node $u$. 
+	    Because $\mathcal{G}$ is otherwise uniform on its connected components, the fast-timescale dynamics concentrate in the neighborhood of $u$. 
+    	We can distinguish two qualitative regimes: 
+    	\begin{enumerate}
+    		\item \textbf{Subcriticality:} With high probability, the dissenting opinion on $u$ is eventually either snuffed out by $1\mapsto 0$ voting or quarantined by rewiring. 
+    		Subsequent opinion-switches will generate similar ``outbreaks,'' which are then similarly contained.   
+    		\item \textbf{Supercriticality:} With nonzero probability, the dissenting opinion $u$ triggers a cascade of active edge-generation, which eventually pushes the system out of the $\rho = 0$ region of state space. 
+    	\end{enumerate}
+    	These regimes are separated by critical values in parameter space of $\alpha$, $\lambda$, and the mean-degree $c$. 
+    	Indeed, the boundary between these regimes is precisely the phase transition described in \Cref{sec:AVMs}. 
+    	The situation is thus reminiscent of the standard Galton-Watson branching process, in which the criticality of the complete process can be characterized by the reproductive potential of an individual node. 
+    	
+    	To develop quantitative approximations, we therefore approximate the local dynamics around a single node. 
+    	Consider again the case in which a single node $u$ randomly switches its opinion $0 \mapsto 1$ on an otherwise homogeneous component $C$ of $0$ opinions (\Cref{fig:majorities}, left). 
+		This scenario represents an extreme case in which we can distinguish an \emph{local majority} -- despite the fact that $C$ is no longer fully homogeneous, local neighborhoods within $C$ are still statistically dominated by opinion $0$ nodes. 
+		Indeed, the local majority is distinguishable even after an $o\left(\abs{C}\right)$ number of subsequent voting events within the component (\Cref{fig:majorities}, right). 
+        In the subcritical regime discussed above, local majorities are persistently distinguishable through the cycle of ``outbreaks,'' while in the supercritical regime the distinction eventually breaks down as opinions become increasingly well-mized. 
         
 		\begin{figure}
 			\centering
@@ -276,12 +274,6 @@
 			On the right, the same component after a mutation and voting step, generating two opinion $1$ (orange) nodes.} \label{fig:majorities}
 		\end{figure}
 
-        In the subcritical parameter regime,  the mutation will eventually be neutralized: it will either be eliminated by $1\mapsto 0$ voting events or quarantined by rewirings. 
-		Either result returns the system to the fully-fragmented regime until the next mutation event, after which the process will repeat. 
-		The equilibrium behavior in the subcritical regime thus consists of a sequence of  ``outbreaks'' of local dissent spawned by mutations and contained by rapid rewiring and voting. 
-		Because of this, in the subcritical regime there is a persistent distinction between local minority and local majority nodes. 
-		Indeed, the argument extends to $0 < \rho \ll \frac{1}{2}$, since when active edges are rare the local neighborhoods will exhibit similar asymmetry between the role \pjm{?} of the local minority and local majority nodes. \pc{Rework and consolidate into the criticality discussion above.}
-        
 		The importance of the local majority/minority distinction is that voting events by the two types of nodes have qualitatively different impacts on the edge density vector $\x$. 
 		It is useful to name these two types of events. 
 		In \emph{forward} votes, a member of the local majority adopts the opinion of the local minority, spreading the initial mutation. 
