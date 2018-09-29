@@ -203,7 +203,6 @@
 	    The strategy is to conduct a perturbative analysis about the fully fragmented state $\rho = 0$. 
 	    When $\lambda = 0$, the fragmented state is trivially stable and no useful analysis is possible. 
 	    In contrast, when $\lambda > 0$, the system is subject to small fluctuations induced by the random-opinion switching, which may potentially drive the system to a qualitatively new region of phase space. 
-	    We now explore this perturbative approach in detail. 
 	    
 	    Consider the genesis via opinion-switching of a single dissenting node $u$. 
 	    Because $\mathcal{G}$ is otherwise uniform on its connected components, the fast-timescale dynamics concentrate in the neighborhood of $u$. 
@@ -273,28 +272,35 @@
 			On the leftthand side, a sample component from a fully-fragmented network, in which all nodes have opinion $0$ (blue). 
 			On the right, the same component after a mutation and voting step, generating two opinion $1$ (orange) nodes.} \label{fig:majorities}
 		\end{figure}
-
-		The importance of the local majority/minority distinction is that voting events by the two types of nodes have qualitatively different impacts on the edge density vector $\x$. 
-		It is useful to name these two types of events. 
-		In \emph{forward} votes, a member of the local majority adopts the opinion of the local minority, spreading the initial mutation. 
-		In \emph{backward} votes, a member of the local minority adopts the opinion of the local minority, causing the initial mutation to retreat.  
-		We emphasize that these two classes of events are distinct from the label-based classes $0\mapsto 1$ and $1 \mapsto 0$ events in that the label-based classes occur with equal frequency and at equilibrium have symmetric (equal and opposite) expected impacts on $\X$.
-		In contrast, forward votes are more frequent and tend to increase $\rho$ by more than backward votes decrease it.  
-		To see why, consider the sample scenario shown in \cref{fig:breaking_illustration}. 
-		Opinion $1$ (orange) is a local minority in a component statistically dominated by opinion $0$ nodes (blue). 
-		We join the action (\cref{subfig:first}) just after a forward voting event has resulted in node $u$ changing its opinion $0 \mapsto 1$. 
-		We restrict attention to the three active edges attached to $u$, and start a local clock $\tau_u \in \mathbb{Z}_+$ that counts the number of events that remove a discordant edge from $u$ \pjm{This local clock confuses me and I'm not sure it really buys us that much here in this paragraph? Does anything bad happen if we simply remove it from the discussion?}\pc{I do think we need a way to note that we are only counting events ``near'' $u$. Do you think that just saying that in words would be clearer?}. 
-		At time $\tau_u = 0$, voting events along $u$'s active edges are symmetrical: the probability of forward and backward votes are equal. 
-		A forward vote adds $2$ net active edges, while a backward vote removes $2$ net active edges. 
-		This symmetry is broken by subsequent rewiring and voting events.
-		\Cref{subfig:second} shows one possible realization at local time $\tau_u = 2$, in which two active edges have been rewired away from $u$. 
-		While a forward vote still adds $2$ net active edges, a backward vote now has no net impact on the active edge density. 
-		Intermediate voting events have even greater impact on the behavior of backward voting. 
-		In \cref{subfig:third}, two forward voting events have taken place on active edges attached to $u$. 
-		A backward vote by $u$ at this moment would remove $2$ net active edges. 
-		These phenomena may be observed in simulation data, shown in \Cref{sec:simulation_symmetry} \pjm{Are you still planning to add this figure?}. \pc{Currently it's in the supplementary, and the crossref isn't rendering on Overleaf. Opinion on whether it should be main text?}
-		
-		\begin{figure}
+	
+	We now develop a closed approximation scheme by expanding around the subcritical regime. 
+	Let $\x(t) = \E[\X(t)]$. 
+	Conditioning on event types, the dynamics in $\x$ may be written
+	\begin{align}
+		m(\x(t+1) - \x(t)) = \lambda \mathbf{w}(\mathcal{G}(t)) + (1-\lambda)\alpha \mathbf{r}(\mathcal{G}(t)) + (1-\lambda)(1-\alpha) \mathbf{v}(\mathcal{G}(t))\;, \label{eq:dynamics}
+	\end{align}
+	where $\mathbf{w}$, $\mathbf{r}$, and $\mathbf{v}$ are functions of the graph state $\mathcal{G}(t)$ giving the increments in $\x$ due to mutation, rewiring, and voting, respectively. 
+	Importantly, $\mathbf{w}$ and $\mathbf{r}$ depend only on $\q$ and $\x$, the first and second moments of $\mathcal{L}$. 
+	\begin{align*}
+		w_{ij}(\mathcal{G}) = w_{ij}(\x) = 
+		\begin{cases}
+			c(x_{10} - x_{00}) &  i = j = 0 \\ 
+			c (x_{01}-x_{11}) & i = j = 1 \\ 
+			c (x_{00}  - x_{10}+x_{11}-x_{01}) & i \neq j\;.
+		\end{cases}
+	\end{align*}
+	To compute $\mathbf{r}$, we write \pjm{Easier to understand if you write it in the same form as w was just written?}\pc{I take your point that this is confusing. I don't think I see how that would work in context -- was there a compact and symmetric format that you had in mind?}
+	\begin{align*}
+		\mathbf{r}(\mathcal{G}) = \mathbf{r}(\q) = 
+		\begin{cases}
+			\left(\q_0, -\frac{1}{2}, -\frac{1}{2}, \q_1\right) & \text{rewire-to-random}\\
+			\left(1, -1, -1, 1\right) & \text{rewire-to-same}.
+		\end{cases}
+	\end{align*}
+	Unfortunately, the voting function $\mathbf{v}$ cannot be parsed exactly in any fixed, finite set of system moments.  
+	We may therefore view the short-timescale dynamics of $\x$ for fixed $\q$ as the superposition of Markovian opinion-switching and rewiring processes with a non-Markovian voting process. 
+	
+			\begin{figure}
 			\centering
 			\begin{subfigure}{.3\textwidth}
 				\begin{tikzpicture}[scale=.8, auto,swap]
@@ -451,74 +457,42 @@
 				\Cref{subfig:third} illustrates an alternative scenario at $\tau_u = 2$, in which two forward votes have taken place along active edges attached to $u$. 
 				}\label{fig:breaking_illustration}
 		\end{figure}
-
-\section{Analytical Methods} \label{sec:analytic}
-	We now develop an analytical framework that leverages the asymmetry between forward and backward votes to produce accurate approximations for $\rho^*(\q; c, \alpha)$, the equilibrium density of discordant edges given the opinion density $\q$ and parameters $c$ and $\alpha$. 
-
-	Let $\x(t) = \E[\X(t)]$. 
-	Conditioning on event types, the dynamics in $\x$ may be written
-	\begin{align}
-		m(\x(t+1) - \x(t)) = \lambda \mathbf{w}(\mathcal{G}(t)) + (1-\lambda)\alpha \mathbf{r}(\mathcal{G}(t)) + (1-\lambda)(1-\alpha) \mathbf{v}(\mathcal{G}(t))\;, \label{eq:dynamics}
-	\end{align}
-	where $\mathbf{w}$, $\mathbf{r}$, and $\mathbf{v}$ are functions of the graph state $\mathcal{G}(t)$ giving the increments in $\x$ due to mutation, rewiring, and voting, respectively. 
-	Importantly, however, $\mathbf{w}$ and $\mathbf{r}$ depend only on $\q$ and $\x$, the zeroth and first moments of $\mathcal{G}$ \pjm{It's actually the first and second moments of the opinion distribution on $\mathcal{G}$, right?}\pc{Guess it depends on whether the ``$n$th'' moment refers to expectations involving $n$ edges or $n$ nodes. No problem to use the latter convention} . 
-	To write out $\mathbf{w}$, it is useful to introduce the notation $\mathbf{c}$ with components $c_{ij} = c\frac{x_{ij}}{q_i}$ denoting the average number of neighbors of type $j$ of a node of type $i$. 
-	Note that, while $x_{ij} = x_{ji}$, $c_{ij} \neq c_{ji}$ for $\q \neq \left(\frac{1}{2}, \frac{1}{2}\right)$. 
-	We can then write \pjm{Is this an improvement? Why not write it in terms of $\x$, as already indicated here?}
-	\begin{align*}
-		w_{ij}(\mathcal{G}) = w_{ij}(\x) = 
-		\begin{cases}
-			\q_{0}(c_{10} - c_{00}) &  i = j = 0 \\ 
-			\q_1 (c_{01}-c_{11}) & i = j = 1 \\ 
-			\q_0 (c_{00}  - c_{10}) +  \q_1(c_{11}-c_{01}) & i \neq j\;.
-		\end{cases}
-	\end{align*}
-	To compute $\mathbf{r}$, we write \pjm{Easier to understand if you write it in the same form as w was just written?}\pc{I take your point. I don't think I see how that would work in context -- was there a compact and symmetric format that you had in mind?}
-	\begin{align*}
-		\mathbf{r}(\mathcal{G}) = \mathbf{r}(\q) = 
-		\begin{cases}
-			\left(\q_0, -\frac{1}{2}, -\frac{1}{2}, \q_1\right) & \text{rewire-to-random}\\
-			\left(1, -1, -1, 1\right) & \text{rewire-to-same}.
-		\end{cases}
-	\end{align*}
-	The difficulty arises in that the voting function $\mathbf{v}$ cannot be similarly parsed exactly in any fixed, finite set of system moments \cite{Demirel2012}. 
-	We may therefore view the short-timescale dynamics of $\x$ as the superposition of a Markovian process (in the space of $\q$ and $\x$) governed by mutation and rewiring with a non-Markovian process governed by voting. 
 	
-	\subsection{Phase Transition}
-		Our analytical strategy is to replace the non-Markovian term with a Markovian approximation near the phase transition, which we do using the observations about the symmetry-breaking behavior discussed above. 
-		We will suppose that 
+		Our analytical strategy is to replace the non-Markovian voting term with a Markovian approximation near the phase transition using our observation on local minorities. 
+		That is, we will suppose that 
 		\begin{align}
 			\mathbf{v}(\mathcal{G}) \approx \hat{\mathbf{v}}(\q, \x)\;, \label{eq:markov}
 		\end{align}
 		when $\rho \ll \frac{1}{2}$, which is a first-order Markovian assumption on $\x$ as a function of $\q$. 
 		In this sense, our approach is similar to the common pair approximation (PA). 
-		However, whereas the PA is a general approach that relies on a closure approximation, we here use the broken symmetry between forward and backward votes to directly develop more accurate approximations. 
+		We can, however, substantially improve on the PA using the broken symmetry between local majorities and minorities. 
 
 		We fix node $u$, and suppose, as in \Cref{fig:breaking_illustration}, that at time $\tau = 0$, $u$ changed its opinion from $j \in \{0,1\}$ to $i \in \{1,0\}$ due to either a mutation or a voting step. 
-		As a result of this event, $u$ now possesses certain (random) numbers $J_0$ of inactive and $K_0$ of active edges, whose distributions depend on $\q$, $\x$, and possibly higher-order moments as well.
-		To approximate $\hat{v}$, we track each of the $K_0$ discordant edges until each of them has been made concordant, logging voting events along the way. 
-		By doing so, we are able to distinguish between forward and backward votes, approximating both the frequency and impact of each on $\x$. 
-		Averaging over those events thus provides an approximation for $\mathbf{v}$.
-		The quality of the approximation depends on the extent to which the relative frequencies and effects of the tracked voting events reflect those which occur in the true system. 
+		As a result of this event, $u$ now possesses a  random number $J_0$ of inactive and a random number $K_0$ of active edges. 
+		The distributions of $J_0$ and $K_0$ depend on $\q$, $\x$, $c$, and potentially higher-order moments as well. 
+		To approximate $\hat{v}$, we track each of the $K_0$ active edges until each of them has been made inactive, logging voting events along the way.
+		Approximating the impact of these events on the active edge count and averaging thus provides an  approximation for $\mathbf{v}$.
+		
+		Under timescale separation and mean-field   assumptions, these calculations may be carried out in closed form. 
+		The time-scale separation assumption supposes that $\mathcal{G}$ is changing slowly relative to the ego network of node $u$, so that only dynamics that sample the initial $K_0$ edges need to be accounted for. 
+		This assumption will be strongest when $\rho \approx 0$ and $\lambda \approx 0$. 
+		The mean-fielda ssumption supposes that nodes in the local majority have degree distributions governed by the global network average $\x$. 
+		This assumption reflects the intuition that, for small $\rho$, ``most nodes'' are by definition members of their respective local majorities. 
+		It allows us to approximate the the distributions of $J_0$ and $K_0$ in terms of $\q$ and $\x$. 
+		Define the vector $\C$ with components $c_{ij} = c\frac{x_{ij}}{q_i}$ denoting the average number of neighbors of type $j$ of a node of type $i$. 
+		Note that, while $x_{ij} = x_{ji}$, $c_{ij} \neq c_{ji}$ for $\q \neq \left(\frac{1}{2}, \frac{1}{2}\right)$.
+		Under the mean-field assumption, $\E[K_0] = c_{00}$. 
+		Meanwhile, $\E[J_0] = 1 + c_{01}$ if $u$ emerged as a forward vote, and $\E[J_0] = 0$ if $u$ emerged as a mutation. 
+		In the approximations below, we model each of $K_0$ and $J_0$ as truncated Poisson random variables with the appropriate intensities. 
 
-	Assumptions of timescale separation and mean field majorities together make our calculation tractable.
-	We assume that the remainder of $\mathcal{G}$ is changing slowly relative to the ego network of node $u$, so that only dynamics that sample the initial $K_0$ edges need to be accounted for. 
-			This assumption will be strongest when $\rho \ll 1$ and $\lambda \ll 1$. 
-	We also assume that nodes in the local majority have degree distributions governed by the global network average $\x$. 
-		The mean-field approximation is used to approximate the distributions of $J_0$ and $K_0$. 
-		Under our hypotheses, node $u$ was in the local majority in the immediately previous time-step before we joined the action (when node $u$ became a local minority node).
-		This allows us to approximate the distributions of $J_0$ and $K_0$ in terms of $\q$ and $\x$. 
-		In particular, we have that $\E[K_0] = c_{00}$. Meanwhile, $\E[J_0] = 1 + c_{01}$ if $u$ emerged as a forward vote or $\E[J_0] = 0$ if $u$ emerged as a mutation. 
-		In the approximations below, we model each of $K_0$ and $J_0$ as truncated Poisson random variables with the appropriate averages. 
-
-		We now define notation to track the various types of voting events. 
-		Let $R$ be a random variable giving the number of voting events by neighbors of $u$. 
-		By the timescale separation assumption, we may assume that each such vote happens along one of the $K_0$ initial active edges. 
-		Since $u$ is assumed to be in the local minority, votes by neighbors are forward votes. 
-		Let $W$ give the number of voting events by nodes not attached to $u$ due to one of the $K_0$ active edges \pjm{Looking for clarification: can we simply use the phrase you have in the ``rewire-to-random'' sentence to say clearly what this?}. 
-		In the case of the rewire-to-same model, no such events occur. 
-		In the rewire-to-random model, these events occur when an edge attached to $u$ is rewired in such a way that it is no longer attached to $u$, but to another node of the same opinion. 
-		Let $\1_u$ be the indicator variable that $u$ changes its vote (i.e. votes backwards) prior to all $K_0$ active edges being resolved. 
+		There are multiple types of voting events we need to track, and we define random variables for each. 
+		\begin{itemize}
+			\item Neighbors of $u$ may vote. By the separation of timescales assumption, each such vote happens along one of the $K_0$ initial active edges. By the mean-field assumption, votes on these nodes are governed by the global statistics $\C$. Let $R$ denote the (random) number of such votes. 
+			\item Nodes not attached to $u$ may vote. In the rewire-to-random model, such voting events occur when an active edge attached to $u$ is rewired in such a way that it is no longer attached to $u$, but remains active. In the rewire-to-same model, such events do not occur. Let $S$ denote the (random) number of these events. 
+			\item Finally, let $\1_u$ be the indicator random variable for the event that node $u$ changes its vote prior to all $K_0$ active edges being resolved. 
+		\end{itemize}
+		
+		% START HERE
 
 		These variables will count the voting events, but we also require vectors to track the impact of a given event on $\x$. 
 		Under the mean-field assumption, forward votes are governed by the global mean degrees $\C$. 
