@@ -17,7 +17,6 @@
     pdfauthor={P. Chodrow, P. J. Mucha}
   }
 \fi
-\externaldocument{supplementary}
 
 \begin{document}
 \maketitle
@@ -64,7 +63,7 @@
     In many social networks, we naturally expect the opinions of individuals to both influence and be influenced by the connections they form. 
 	Over the past dozen years, a class of \emph{adaptive network} models has emerged to model such reciprocal influences. 
 	Adaptive networks \cite{Gross2008,Gross2009} are characterized by dynamical coupling between node attributes and edge topology.
-	Such models have been studied in a range of contexts, including epidemic spreading \cite{Gross2006,Marceau2010,Gross2017,Lee2017,Horstmeyer2018} and game theory \cite{Lee2018} \pjm{We need to grab at least one (or two?) more refs from the Lee2018 paper}, but are most commonly deployed as models of opinion dynamics \cite{Holme2006,Durrett2012,Gross2012,Gross2014,Malik2016,Shi2013}. 
+	Such models have been studied in a range of contexts, including epidemic spreading \cite{Gross2006,Marceau2010,Gross2017,Lee2017,Horstmeyer2018} and game theory \cite{Lee2018} \pjm{We need to grab at least one (or two?) more refs from the Lee2018 paper},\footnote{Maybe Pacheco et al 2006, the other Pacheco et al 2006, Zhou et al 2013 elsewhere, and Pinheiro et al 2016.} but are most commonly deployed as models of opinion dynamics \cite{Holme2006,Durrett2012,Gross2012,Gross2014,Malik2016,Shi2013}. 
 	In this setting, they are often called \emph{adaptive} (or \emph{coevolutionary}) \emph{voter models} (AVMs). 
 	The ``voter'' aspect of these models is reflected in the node attribute update step, which typically involves a given node adopting the opinion of one of its neighbors. 
 	This form of update step is shared by many (non-adaptive) voter models.\footnote{Though non-voter type updates are also possible in adaptive opinion-dynamics models, see e.g. \cite{Bhawalkar2013a} for a game-theoretic approach.} 
@@ -201,7 +200,7 @@
 	    Because $\mathcal{G}$ is otherwise uniform on its connected components, the fast-timescale dynamics concentrate in the neighborhood of $u$. 
     	We can distinguish two qualitative regimes: 
     	\begin{enumerate}
-    		\item \textbf{Subcriticality:} With high probability, the dissenting opinion on $u$ is eventually either snuffed out by $\{1\mapsto 0,0\mapsto 1\}$ voting \pjm{What do you think of this set notation showing both options? Or can we just say ``voting" without the set?} or quarantined by rewiring. 
+    		\item \textbf{Subcriticality:} With high probability, the dissenting opinion on $u$ is eventually either snuffed out by $\{1\mapsto 0\}$ voting \pjm{What do you think of this set notation showing both options? Or can we just say ``voting" without the set?}\pc{The case in which $0\mapsto1$ votes resolve the dissension actually corresponds to the mutation taking over a macroscopic portion of the component, which is contained in the supercritical case below. Removed second direction.} or quarantined by rewiring. 
     		Subsequent opinion-switches will generate similarly temporary outbreaks which are then similarly contained.   
     		As a result, the proportion $\rho$ of discordant edges is $o(1)$ with high probability as $n$ grows large, and the system remains near the $\rho = 0$ region of state-space. 
     		\item \textbf{Supercriticality:} With nonzero probability, the dissenting opinion $u$ triggers a cascade of active edge-generation, which eventually pushes the system away from the $\rho = 0$ region of state space. 
@@ -285,9 +284,9 @@
     			c (x_{00}  - x_{10}+x_{11}-x_{01}) & i \neq j\;.
     		\end{cases}
     	\end{align*}
-    	To compute $\mathbf{r}=(r_{00}, r_{01}, r_{10}, r_{11})$ we write \pjm{Easier to understand if you write it in the same form as w was just written?}\pc{I take your point that this is confusing. I don't think I see how that would work in context -- was there a compact and symmetric format that you had in mind?}\pjm{How is what I just wrote expanding out the $\mathbf{r}$?}
+    	To compute the rewiring term $r$, we write 
     	\begin{align*}
-    		\mathbf{r}(\mathcal{G}) = \mathbf{r}(\q) = 
+    		\mathbf{r}(\mathcal{G}) = \mathbf{r}=(r_{00}, r_{01}, r_{10}, r_{11}) = 
     		\begin{cases}
     			\left(\q_0, -\frac{1}{2}, -\frac{1}{2}, \q_1\right) & \text{rewire-to-random}\\
     			\left(1, -1, -1, 1\right) & \text{rewire-to-same}.
@@ -301,7 +300,8 @@
 		\begin{align}
 			\mathbf{v}(\mathcal{G}) \approx \hat{\mathbf{v}}(\q, \x)\;, \label{eq:markov}
 		\end{align}
-		when $\rho \ll \frac{1}{2}$, which is a first-order Markovian assumption on $\x$ as a function of $\q$. \pjm{Do you mean ``on $\mathbf{v}$ as a function of $\x$ and $\q$?}
+		when $\rho \ll \frac{1}{2}$. 
+		This assumption closes \Cref{eq:dynamics} in $\x$, and therefore constitutes a first-order Markovian assumption on $\x$ as a function of $\q$. 
 		We fix node $u$, and suppose that at some initial time $u$ changed its opinion from $j \in \{0,1\}$ to $i \in \{1,0\}$ through either random opinion-switching or a voting step. 
 		As a result of this event, $u$ now possesses a  random number $J_0$ of inactive and a random number $K_0$ of active edges. 
 		The distributions of $J_0$ and $K_0$ depend on $\q$, $\x$, $c$, and potentially higher-order moments as well. 
@@ -385,7 +385,7 @@
         \end{align*}
         
         To compute the remaining terms, it is useful to define the coefficients 
-        \begin{align}
+        \begin{align*}
         \eta_i \triangleq 
         \begin{cases}
           \frac{1-\alpha(1-q_i)}{1+\alpha q_i}\,,  \\ 
@@ -401,7 +401,7 @@
           \frac{2(1-\alpha)}{2-\alpha}\,, &\quad \text{rewire to random}\,, \\ 
           0\,,   &\quad \text{rewire to same.}
         \end{cases} \label{eq:coefs}
-        \end{align}
+        \end{align*}
         The coefficient $\eta$ gives the probability that an event that removes an active edge from $u$, other than a vote by $v$, produces an inactive edge either through rewiring or through a vote by a neighbor of $v$. The coefficient $\rho$ gives the probability that such an event is in fact a vote by a neighbor of $v$. The coefficient $\sigma$ gives the probability that an active edge which is rewired but not resolved is ultimately resolved via a vote. 
         
         Node $u$ gains inactive edges via rewiring and voting at rate $\eta_i$. 
@@ -443,7 +443,7 @@
 			\centering
 				\includegraphics[width=1\textwidth]{transition_joy}
 			\caption{Approximating the phase transition. 
-			Grey ridges give simulation traces \pjm{of $\rho$, right?} from networks with $n = 10^4$ nodes, $\lambda = 2^{-16}$, and varying $c$ and $\alpha$. 
+			Grey ridges give simulation traces of $\rho$ from networks with $n = 10^4$ nodes, $\lambda = 2^{-16}$, and varying $c$ and $\alpha$. 
 			The green curve gives the prediction of the phase transition found by numerically solving \Cref{eq:transition_approx} via least-squares. 
 			The orange curve gives the pair approximation (PA) as derived in \cite{Durrett2012} for each model variant.}
 			\label{fig:transition_joy}
@@ -480,7 +480,7 @@
 		In the rewire-to-same case, however, the fast rewiring does not explicitly depend on $\q$. 
 		An active edge attached to $u$ and rewired becomes inactive with probability $1$, regardless of the value of $\q$. 
 		The local dynamics are not fully independent of $\q$, but the dependence is mediated by the slow voting dynamics. 
-		\todo{This is correct but needs to be made much tighter -- look for a precise punchline.} \pjm{This intuition is really good here. I'm curious, there also seems to be a way in which the model for rewire-to-same has a degenerate behavior at small $\rho$ in that it also implies that one of the opinions is of small population, so then three of the edge types are small. I'm just babbling...}\pc{I'm interested in where you're going here. At the moment, I can't see the distinction between the two models along these lines -- want to elaborate?}\pjm{It's very possible it wasn't a well-formed thought on my part (smile). I think I was trying to observe that in principle the only time the $\rho$ near zero for rewire-to-same should be stable is if one of the 2 opinions was all but vanished. But this might not be useful for anything. Feel free to comment this discussion away.}
+		% \pjm{This intuition is really good here. I'm curious, there also seems to be a way in which the model for rewire-to-same has a degenerate behavior at small $\rho$ in that it also implies that one of the opinions is of small population, so then three of the edge types are small. I'm just babbling...}\pc{I'm interested in where you're going here. At the moment, I can't see the distinction between the two models along these lines -- want to elaborate?}\pjm{It's very possible it wasn't a well-formed thought on my part (smile). I think I was trying to observe that in principle the only time the $\rho$ near zero for rewire-to-same should be stable is if one of the 2 opinions was all but vanished. But this might not be useful for anything. Feel free to comment this discussion away.}
 	
 		We now turn to the approximation of $\rho^*(\q;\alpha)$, the equilibrium density of active edges, for $\alpha < \alpha^*$. 
 		In this regime, the distinction between local minority and majority nodes progressively erodes, along with the separation of timescales assumption. 
@@ -504,7 +504,7 @@
 				\includegraphics[width=.8\textwidth]{arch_tops}
 			\caption{Supercritical equilibria for $\q = \left(\frac{1}{2}, \frac{1}{2}\right)$.
 			Dots give simulation traces from a network of $n = 10^4$, $\lambda = 2^{-12}$, and varying $\alpha$ and $c$.
-			Solid lines give the approximation to $\rho$ computed by numerically solving \Cref{eq:dynamics} and \Cref{eq:component_approx_super}. \pjm{Fix the Cref}} \label{fig:arch_tops}
+			Solid lines give the approximation to $\rho$ computed by numerically solving \Cref{eq:dynamics} using \Cref{eq:v_hat} and the supercritical interpolation \Cref{eq:interpolation}.} \label{fig:arch_tops}
 		\end{figure}
 		
 		To evaluate the supercritical approximation, we first consider its performance on the common estimation task with $\q = \left(\frac{1}{2}, \frac{1}{2}\right)$. 
@@ -531,7 +531,7 @@
 			\centering
 				\includegraphics[width=1\textwidth]{arches}
 			\caption{Approximations to arches for rewire-to-random and rewire-to-same systems with varying mean degree $c$ and rewiring rate $\alpha$. 
-			Curves give theoretical predictions obtained by numerically solving \Cref{eq:dynamics} and \Cref{eq:component_approx_super} \pjm{Fix the Cref}. 
+			Curves give theoretical predictions obtained by numerically solving \Cref{eq:dynamics} using \Cref{eq:v_hat} and the supercritical interpolation \Cref{eq:interpolation}. 
 			Points give simulation averages traces from networks with $n = 10^4$ nodes,  $\lambda = 2^{-16}$, and varying $\alpha$.}
 			\label{fig:arches}
 		\end{figure}
